@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+<title>angel.fm — vinyl archive</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  background:#090909;
+  color:#f5f5f5;
+  font-family:'Inter',sans-serif;
+  overflow-x:hidden;
+}
+
+/* background blur */
+
+.blur1{
+  width:500px;
+  height:500px;
+  background:#ff4fd8;
+  position:fixed;
+  border-radius:50%;
+  filter:blur(140px);
+  opacity:0.12;
+  top:-200px;
+  left:-150px;
+  z-index:-1;
+}
+
+.blur2{
+  width:500px;
+  height:500px;
+  background:#4fd5ff;
+  position:fixed;
+  border-radius:50%;
+  filter:blur(140px);
+  opacity:0.10;
+  bottom:-200px;
+  right:-100px;
+  z-index:-1;
+}
+
+header{
+  padding:30px 8%;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  position:fixed;
+  width:100%;
+  top:0;
+  z-index:999;
+  backdrop-filter:blur(14px);
+  background:rgba(0,0,0,0.25);
+  border-bottom:1px solid rgba(255,255,255,0.05);
+}
+
+.logo{
+  font-family:'Cormorant Garamond',serif;
+  font-size:2rem;
+  letter-spacing:2px;
+}
+
+.logo span{
+  color:#ff9ce9;
+}
+
+nav a{
+  text-decoration:none;
+  color:#d7d7d7;
+  margin-left:28px;
+  font-size:0.95rem;
+  transition:0.3s;
+}
+
+nav a:hover{
+  color:white;
+}
+
+.hero{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:120px 8%;
+}
+
+.hero-content{
+  max-width:1200px;
+  width:100%;
+  display:grid;
+  grid-template-columns:1fr 500px;
+  gap:80px;
+  align-items:center;
+}
+
+.small-tag{
+  color:#ffb8ef;
+  letter-spacing:4px;
+  font-size:0.8rem;
+  margin-bottom:20px;
+}
+
+.hero h1{
+  font-family:'Cormorant Garamond',serif;
+  font-size:6rem;
+  line-height:0.95;
+  font-weight:600;
+  margin-bottom:30px;
+}
+
+.hero p{
+  color:#b6b6b6;
+  line-height:1.9;
+  max-width:550px;
+  margin-bottom:40px;
+}
+
+.buttons{
+  display:flex;
+  gap:18px;
+}
+
+.btn{
+  padding:16px 30px;
+  border-radius:50px;
+  border:none;
+  cursor:pointer;
+  font-size:0.95rem;
+  transition:0.4s;
+}
+
+.primary{
+  background:white;
+  color:black;
+}
+
+.primary:hover{
+  transform:translateY(-4px);
+}
+
+.secondary{
+  background:transparent;
+  border:1px solid rgba(255,255,255,0.1);
+  color:white;
+}
+
+.secondary:hover{
+  background:rgba(255,255,255,0.05);
+}
+
+.hero-card{
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:35px;
+  padding:25px;
+  backdrop-filter:blur(20px);
+  position:relative;
+  overflow:hidden;
+}
+
+.hero-card::before{
+  content:"";
+  width:180px;
+  height:180px;
+  background:#ff4fd8;
+  position:absolute;
+  border-radius:50%;
+  filter:blur(100px);
+  top:-50px;
+  right:-50px;
+  opacity:0.2;
+}
+
+.album-cover{
+  width:100%;
+  height:500px;
+  border-radius:25px;
+  object-fit:cover;
+}
+
+.now-playing{
+  margin-top:22px;
+}
+
+.now-playing span{
+  color:#8b8b8b;
+  font-size:0.8rem;
+  letter-spacing:2px;
+}
+
+.now-playing h2{
+  margin-top:10px;
+  font-size:1.8rem;
+  font-weight:600;
+}
+
+.now-playing p{
+  color:#9e9e9e;
+  margin-top:5px;
+}
+
+.wave{
+  display:flex;
+  gap:5px;
+  margin-top:25px;
+  align-items:flex-end;
+  height:40px;
+}
+
+.wave div{
+  width:4px;
+  background:white;
+  border-radius:20px;
+  animation:wave 1s infinite ease-in-out;
+}
+
+.wave div:nth-child(2){animation-delay:0.1s;}
+.wave div:nth-child(3){animation-delay:0.2s;}
+.wave div:nth-child(4){animation-delay:0.3s;}
+.wave div:nth-child(5){animation-delay:0.4s;}
+
+@keyframes wave{
+  0%,100%{
+    height:10px;
+    opacity:0.4;
+  }
+
+  50%{
+    height:40px;
+    opacity:1;
+  }
+}
+
+/* SECTION */
+
+.section{
+  padding:120px 8%;
+}
+
+.section-title{
+  display:flex;
+  justify-content:space-between;
+  align-items:end;
+  margin-bottom:50px;
+}
+
+.section-title h2{
+  font-family:'Cormorant Garamond',serif;
+  font-size:4rem;
+  font-weight:500;
+}
+
+.section-title p{
+  color:#8f8f8f;
+  max-width:350px;
+  line-height:1.7;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:30px;
+}
+
+.card{
+  background:rgba(255,255,255,0.03);
+  border-radius:30px;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,0.05);
+  transition:0.5s;
+  position:relative;
+}
+
+.card:hover{
+  transform:translateY(-10px);
+  border:1px solid rgba(255,255,255,0.15);
+}
+
+.card img{
+  width:100%;
+  height:360px;
+  object-fit:cover;
+}
+
+.card-content{
+  padding:25px;
+}
+
+.genre{
+  color:#ffb8ef;
+  font-size:0.75rem;
+  letter-spacing:3px;
+  margin-bottom:12px;
+}
+
+.card h3{
+  font-size:1.7rem;
+  margin-bottom:12px;
+  font-family:'Cormorant Garamond',serif;
+}
+
+.card p{
+  color:#9c9c9c;
+  line-height:1.7;
+  margin-bottom:20px;
+}
+
+.bottom{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.price{
+  font-size:1.2rem;
+}
+
+.buy{
+  background:white;
+  color:black;
+  border:none;
+  padding:10px 18px;
+  border-radius:40px;
+  cursor:pointer;
+}
+
+footer{
+  padding:60px 8%;
+  border-top:1px solid rgba(255,255,255,0.05);
+  color:#6f6f6f;
+  text-align:center;
+  font-size:0.9rem;
+}
+
+@media(max-width:980px){
+
+  .hero-content{
+    grid-template-columns:1fr;
+  }
+
+  .hero h1{
+    font-size:4rem;
+  }
+
+}
+
+@media(max-width:700px){
+
+  nav{
+    display:none;
+  }
+
+  .hero h1{
+    font-size:3rem;
+  }
+
+  .section-title{
+    flex-direction:column;
+    align-items:start;
+    gap:20px;
+  }
+
+  .section-title h2{
+    font-size:3rem;
+  }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="blur1"></div>
+<div class="blur2"></div>
+
+<header>
+
+  <div class="logo">
+    angel<span>.fm</span>
+  </div>
+
+  <nav>
+    <a href="">archive</a>
+    <a href="">vinyls</a>
+    <a href="">cds</a>
+    <a href="">wishlist</a>
+  </nav>
+
+</header>
+
+<section class="hero">
+
+  <div class="hero-content">
+
+    <div>
+
+      <div class="small-tag">
+        curated for sad girls & neon hearts
+      </div>
+
+      <h1>
+        music for
+        people who
+        romanticize
+        everything.
+      </h1>
+
+      <p>
+        coleções inspiradas em Lana Del Rey, Charli XCX,
+        Frank Ocean, ROSALÍA, FKA twigs, The Marías e
+        artistas que transformam estética em sentimento.
+        vinils raros, cds importados e edições limitadas.
+      </p>
+
+      <div class="buttons">
+
+        <button class="btn primary">
+          enter archive
+        </button>
+
+        <button class="btn secondary">
+          latest drops
+        </button>
+
+      </div>
+
+    </div>
+
+    <div class="hero-card">
+
+      <img
+      class="album-cover"
+      src="https://m.media-amazon.com/images/I/71VbnwHhkmL._UF1000,1000_QL80_.jpg"
+      >
+
+      <div class="now-playing">
+
+        <span>NOW PLAYING</span>
+
+        <h2>ultraviolence archive</h2>
+
+        <p>lana del rey inspired collection</p>
+
+        <div class="wave">
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+<section class="section">
+
+  <div class="section-title">
+
+    <h2>featured drops</h2>
+
+    <p>
+      inspirado em hyperpop futurista,
+      indie melancólico e estética tumblr 2014.
+    </p>
+
+  </div>
+
+  <div class="grid">
+
+    <div class="card">
+
+      <img src="https://cdn-images.dzcdn.net/images/cover/60889a9aea1fc2f6c5de0d007f48c576/0x1900-000000-80-0-0.jpg">
+
+      <div class="card-content">
+
+        <div class="genre">
+          BRAT ENERGY
+        </div>
+
+        <h3>charli xcx edition</h3>
+
+        <p>
+          visual chrome neon inspirado
+          na era club classic + hyperpop.
+        </p>
+
+        <div class="bottom">
+
+          <div class="price">
+            R$ 229
+          </div>
+
+          <button class="buy">
+            add
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="card">
+
+      <img src="https://f4.bcbits.com/img/a3849502748_16.jpg">
+
+      <div class="card-content">
+
+        <div class="genre">
+          MIDWEST SADNESS
+        </div>
+
+        <h3>twenty one pilots</h3>
+
+        <p>
+          edição alternativa inspirada
+          em blurryface e trench.
+        </p>
+
+        <div class="bottom">
+
+          <div class="price">
+            R$ 189
+          </div>
+
+          <button class="buy">
+            add
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="card">
+
+      <img src="https://i1.sndcdn.com/artworks-JyEu8VuWBf0Guev2-3Cz5hQ-t500x500.png">
+
+      <div class="card-content">
+
+        <div class="genre">
+          CINEMATIC DREAMPOP
+        </div>
+
+        <h3>the marías archive</h3>
+
+        <p>
+          tons escuros, prata,
+          romance noturno e synths suaves.
+        </p>
+
+        <div class="bottom">
+
+          <div class="price">
+            R$ 259
+          </div>
+
+          <button class="buy">
+            add
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="card">
+
+      <img src="https://cdn-images.dzcdn.net/images/cover/374d7fcb414230fc0e10e168792067ce/0x1900-000000-80-0-0.jpg">
+
+      <div class="card-content">
+
+        <div class="genre">
+          FUTURISTIC ARTPOP
+        </div>
+
+        <h3>fka twigs ritual</h3>
+
+        <p>
+          inspirado em estética angelical,
+          experimental e fashion-core.
+        </p>
+
+        <div class="bottom">
+
+          <div class="price">
+            R$ 299
+          </div>
+
+          <button class="buy">
+            add
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+<footer>
+
+  angel.fm © 2026 —
+  archive your favorite feelings.
+
+</footer>
+
+</body>
+</html>
